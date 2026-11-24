@@ -22,6 +22,15 @@ try {
   process.exit(1);
 }
 
+// Guard: the competition gate only accepts 1-200 characters of
+// non-whitespace UTF-8 text. Refuse anything outside it instead of
+// silently copying an invalid entry through.
+const length = [...text].length;
+if (length < 1 || length > 200 || !/\S/.test(text)) {
+  console.error(`entry.txt must be 1-200 characters, got ${length}`);
+  process.exit(1);
+}
+
 try {
   mkdirSync(outDir, { recursive: true });
   writeFileSync(join(outDir, "entry.txt"), text, "utf8");
